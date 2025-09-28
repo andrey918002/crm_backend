@@ -7,10 +7,12 @@ class ContactViewSet(viewsets.ModelViewSet):
     queryset = Contact.objects.all()
     serializer_class = ContactSerializer
 
-    # Настройка прав: редактировать и удалять только администратор
     def get_permissions(self):
         if self.action in ['update', 'partial_update', 'destroy']:
+            # только админ может изменять и удалять
             permission_classes = [permissions.IsAdminUser]
         else:
-            permission_classes = [permissions.IsAuthenticated]
+            # все могут читать и добавлять
+            permission_classes = [permissions.AllowAny]
         return [permission() for permission in permission_classes]
+
