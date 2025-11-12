@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     # Local apps
     "contacts",
     "store",
+    "accounts"
 ]
 
 # ---------------------- MIDDLEWARE ----------------------
@@ -89,11 +90,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # ---------------------- REST FRAMEWORK ----------------------
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
-        "rest_framework.authentication.BasicAuthentication",
+        "rest_framework.authentication.TokenAuthentication",
         "rest_framework.authentication.SessionAuthentication",
     ],
     "DEFAULT_PERMISSION_CLASSES": [
-        "rest_framework.permissions.AllowAny",  # 👈 всем разрешено (для разработки)
+        "rest_framework.permissions.AllowAny",
     ],
 }
 
@@ -113,3 +114,5 @@ CSRF_TRUSTED_ORIGINS = [
     "http://localhost:5174",
     "http://127.0.0.1:5174",
 ]
+
+AUTH_USER_MODEL = "accounts.CustomUser"
