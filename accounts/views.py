@@ -1,9 +1,12 @@
-# accounts/views.py
+## accounts/views.py
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.authtoken.models import Token
+from rest_framework.parsers import MultiPartParser, FormParser, JSONParser  # Импорт парсеров
 from django.contrib.auth import get_user_model, authenticate
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 
 from .serializers import RegisterSerializer, UserSerializer
 
@@ -11,21 +14,27 @@ User = get_user_model()
 
 
 # ---------------------- Регистрация ----------------------
+@method_decorator(csrf_exempt, name='dispatch') # Отключаем CSRF для POST запросов
 class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
-    serializer_class = RegisterSerializer
+    serializer_class = RegisterSerializer # Обязательно для CreateAPIView
     permission_classes = [permissions.AllowAny]
+    parser_classes = [JSONParser] # Явно указываем парсеры для form-data
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
+
+        # Получаем токен, который был создан в RegisterSerializer.create()
+        token, created = Token.objects.get_or_create(user=user)
+
         return Response({
             "id": user.id,
             "username": user.username,
             "email": user.email,
             "role": user.role,
-            "token": Token.objects.get(user=user).key
+            "token": token.key
         }, status=status.HTTP_201_CREATED)
 
 
@@ -74,5 +83,4 @@ class LogoutView(APIView):
     def post(self, request):
         # Удаляем токен
         Token.objects.filter(user=request.user).delete()
-        return Response({"success": "Logged out successfully"})
-
+        return Response({"success": "Logged out successfully"}, status=status.HTTP_200_OK)
