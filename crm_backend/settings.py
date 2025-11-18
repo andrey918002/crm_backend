@@ -27,7 +27,8 @@ INSTALLED_APPS = [
     # Local apps
     "contacts",
     "store",
-    "accounts"
+    "accounts",
+    "tasks"
 ]
 
 # ---------------------- MIDDLEWARE ----------------------
@@ -104,6 +105,8 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:5173",
     "http://localhost:5174",
     "http://127.0.0.1:5174",
+    "http://localhost:5176",
+    "http://127.0.0.1:5176",
 ]
 CORS_ALLOW_CREDENTIALS = True
 
@@ -113,6 +116,8 @@ CSRF_TRUSTED_ORIGINS = [
     "http://127.0.0.1:5173",
     "http://localhost:5174",
     "http://127.0.0.1:5174",
+    "http://localhost:5176",
+    "http://127.0.0.1:5176",
 ]
 
 AUTH_USER_MODEL = "accounts.CustomUser"
