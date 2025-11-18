@@ -28,7 +28,9 @@ INSTALLED_APPS = [
     "contacts",
     "store",
     "accounts",
-    "tasks"
+    "tasks",
+    'channels',
+    "chat"
 ]
 
 # ---------------------- MIDDLEWARE ----------------------
@@ -60,7 +62,17 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'crm_backend.wsgi.application'
+ASGI_APPLICATION = "crm_backend.asgi.application"
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.pubsub.RedisPubSubChannelLayer", # ✅ ВИПРАВЛЕНО
+        "CONFIG": {
+            # Адреса вашого Redis-сервера
+            "hosts": [("127.0.0.1", 6379)],
+        },
+    },
+}
 
 # ---------------------- DATABASE ----------------------
 DATABASES = {
